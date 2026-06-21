@@ -1,8 +1,8 @@
-function Product(){
-    return (
-        <>
-        <h2>Featured Products</h2>
-        </>
-    );
+function Product() {
+	return (
+		<>
+			<a href="/signup">Singup</a>
+		</>
+	);
 }
 export default Product;
