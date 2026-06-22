@@ -8,6 +8,8 @@ const Wishlist = lazy(() => import("./pages/Wishlist"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Signup = lazy(() => import("./pages/Signup"));
 const About = lazy(() => import("./pages/About"));
+const Shop = lazy(() => import("./pages/Shop"));
+const Craftsmen = lazy(() => import("./pages/Craftmen"));
 
 function App() {
 	return (
@@ -29,6 +31,8 @@ function App() {
 							element={<Signup isLogin={true}></Signup>}
 						></Route>
 						<Route path="/about" element={<About></About>}></Route>
+						<Route path="/shop" element={<Shop></Shop>}></Route>
+						<Route path="/craftsmen" element={<Craftsmen></Craftsmen>}></Route>
 					</Routes>
 				</Suspense>
 			</Router>

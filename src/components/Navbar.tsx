@@ -22,9 +22,9 @@ function Navbar() {
 					</h2>
 
 					<div className="h-6 flex text-gray-500 pl-8 gap-6">
-						<button>Shop</button>
+						<Link to={"shop"}>Shop</Link>
 						<Link to={"about"}>About</Link>
-						<button>Craftsmen</button>
+						<Link to={"craftsmen"}>Craftsmen</Link>
 					</div>
 				</div>
 

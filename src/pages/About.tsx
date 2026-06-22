@@ -21,8 +21,8 @@ function About() {
 				</div>
 			</section>
 			<section className="px-36 py-8">
-				<div className="flex">
-					<div className="bg-[url(/cloth.png)] w-full h-126 bg-no-repeat"></div>
+				<div className="flex gap-6">
+					<img src="/cloth.png" className="w-full h-126"></img>
 
 					<div className=" flex justify-center w-full">
 						<p className="text-xl">
@@ -32,23 +32,23 @@ function About() {
 							extraordinary traditions through weaving, pottery, wood carving,
 							embroidery, painting, and countless other art forms. These crafts
 							are more than products—they are stories, identities, and living
-							pieces of our cultural heritage passed down through generations.
-							Yet in a world driven by mass production and fast fashion, many of
-							these traditions are slowly fading away. While Indian designs and
-							craftsmanship continue to inspire products across the globe, the
-							artisans and communities behind them often receive little
-							recognition for their contributions. Karigar exists to change
-							that. Our platform connects skilled craftsmen directly with people
-							who value authenticity, culture, and handmade excellence. Every
-							product showcased on Karigar represents not only exceptional
-							artistry but also the dedication, history, and heritage of the
-							people behind it. We believe that preserving culture requires more
-							than admiration—it requires participation. By supporting
-							handcrafted products, customers become part of a movement that
-							empowers artisans, sustains traditional livelihoods, and ensures
-							that India's rich artistic legacy continues to thrive for
-							generations to come. Because when an artisan thrives, an entire
-							heritage lives on.
+							pieces of our culturalbg-no-repeat heritage passed down through
+							generations. Yet in a world driven by mass production and fast
+							fashion, many of these traditions are slowly fading away. While
+							Indian designs and craftsmanship continue to inspire products
+							across the globe, the artisans and communities behind them often
+							receive little recognition for their contributions. Karigar exists
+							to change that. Our platform connects skilled craftsmen directly
+							with people who value authenticity, culture, and handmade
+							excellence. Every product showcased on Karigar represents not only
+							exceptional artistry but also the dedication, history, and
+							heritage of the people behind it. We believe that preserving
+							culture requires more than admiration—it requires participation.
+							By supporting handcrafted products, customers become part of a
+							movement that empowers artisans, sustains traditional livelihoods,
+							and ensures that India's rich artistic legacy continues to thrive
+							for generations to come. Because when an artisan thrives, an
+							entire heritage lives on.
 						</p>
 					</div>
 				</div>

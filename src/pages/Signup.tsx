@@ -1,11 +1,14 @@
+import { LineChart } from "lucide-react";
+import { Link } from "react-router-dom";
+
 type AuthProps = {
 	isLogin: boolean;
 };
 function Signup({ isLogin }: AuthProps) {
 	return (
 		<>
-			<div className="flex py-24 px-48 bg-[#F9F9F9] h-full">
-				<div className="bg-[#1E1E2D] w-1/2 h-full hidden xl:flex flex-col justify-center items-center gap-6 px-8">
+			<div className="flex py-24 px-48 bg-[#F9F9F9] ">
+				<div className="flex-1 bg-[#1E1E2D] w-1/2 min-h-full hidden xl:flex flex-col justify-center items-center gap-6 px-8">
 					<h1 className="text-3xl text-white font-bold">KARIGAR</h1>
 
 					<p className="text-white text-center">
@@ -90,9 +93,9 @@ function Signup({ isLogin }: AuthProps) {
 							{isLogin ? "Don't have an account?" : "Already have an account?"}
 						</p>
 
-						<button className="font-bold">
+						<Link to={isLogin ? "/signup" : "/login"}>
 							{isLogin ? "Sign up" : "Log in"}
-						</button>
+						</Link>
 					</div>
 				</div>
 			</div>
