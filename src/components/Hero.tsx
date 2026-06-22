@@ -2,8 +2,11 @@ function Hero() {
 	return (
 		<>
 			<section className="bg-[url(/screen.png)] w-full h-150 xl:h-200 bg-cover bg-no-repeat bg-center">
-				<div className="flex justify-center items-center h-full">
-					<h1 className="text-4xl">India's Finest Art</h1>
+				<div className="flex flex-col justify-center items-center h-full gap-2">
+					<h1 className="text-5xl text-[#F9F9F9]">Karigar</h1>
+					<p className="text-3xl text-[#F9F9F9]">
+						Rooted in Tradition. Crafted for Tomorrow.
+					</p>
 				</div>
 			</section>
 			<section className="px-0 py-16 gap-8 flex flex-col">

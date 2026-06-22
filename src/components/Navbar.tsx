@@ -23,7 +23,7 @@ function Navbar() {
 
 					<div className="h-6 flex text-gray-500 pl-8 gap-6">
 						<button>Shop</button>
-						<button>About</button>
+						<Link to={"about"}>About</Link>
 						<button>Craftsmen</button>
 					</div>
 				</div>

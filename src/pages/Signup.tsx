@@ -1,4 +1,7 @@
-function Signup() {
+type AuthProps = {
+	isLogin: boolean;
+};
+function Signup({ isLogin }: AuthProps) {
 	return (
 		<>
 			<div className="flex py-24 px-48 bg-[#F9F9F9] h-full">
@@ -6,13 +9,32 @@ function Signup() {
 					<h1 className="text-3xl text-white font-bold">KARIGAR</h1>
 
 					<p className="text-white text-center">
-						A sanctuary for the discerning. Curated collections for a refined
-						lifestyle.
+						From the Villages of India to the World — Preserving Art, Empowering
+						Artisans.
 					</p>
 				</div>
+
 				<div className="bg-white xl:w-1/2 w-full h-full p-16 flex flex-col gap-8">
-					<h1 className="text-3xl text-black">Welcome Back</h1>
-					<p className="">Please enter your details to sign in.</p>
+					<h1 className="text-3xl text-black">
+						{isLogin ? "Welcome Back" : "Create Account"}
+					</h1>
+					<p>
+						{isLogin
+							? "Please enter your details to sign in."
+							: "Please enter your details to create an account"}
+					</p>
+
+					{!isLogin && (
+						<label className="flex flex-col">
+							Full Name
+							<input
+								type="text"
+								placeholder="John Doe"
+								className="border border-gray-200 p-4 bg-[#F9F9F9] h-14"
+							></input>
+						</label>
+					)}
+
 					<label className="flex flex-col">
 						Email Address
 						<input
@@ -21,10 +43,13 @@ function Signup() {
 							className=" border border-gray-200 p-4 bg-[#F9F9F9] h-14"
 						></input>
 					</label>
+
 					<label className="flex flex-col">
 						<div className="flex justify-between">
 							<p>Password</p>
-							<button className="font-bold">Forgot password?</button>
+							{isLogin && (
+								<button className="font-bold">Forgot password?</button>
+							)}
 						</div>
 						<input
 							type="password"
@@ -32,7 +57,21 @@ function Signup() {
 							className=" border border-gray-200 p-4 bg-[#F9F9F9] h-14"
 						></input>
 					</label>
-					<button className="bg-black text-white h-15">LOG IN</button>
+
+					{!isLogin && (
+						<label className="flex flex-col">
+							Confirm Password
+							<input
+								type="password"
+								placeholder="••••••••"
+								className="border border-gray-200 p-4 bg-[#F9F9F9] h-14"
+							/>
+						</label>
+					)}
+
+					<button className="bg-black text-white h-15">
+						{isLogin ? "LOG IN" : "SIGN UP"}
+					</button>
 					<div className="flex items-center gap-2 px-2">
 						<div className="flex-1 border border-gray-400"></div>
 						<p className="text-gray-500 py-8 h-20 flex items-center">
@@ -47,8 +86,13 @@ function Signup() {
 						<button className="border border-gray-200 py-3 px-13">Apple</button>
 					</div>
 					<div className="flex justify-center">
-						<p>Don't have an account?</p>
-						<button className="font-bold">Sign up</button>
+						<p>
+							{isLogin ? "Don't have an account?" : "Already have an account?"}
+						</p>
+
+						<button className="font-bold">
+							{isLogin ? "Sign up" : "Log in"}
+						</button>
 					</div>
 				</div>
 			</div>

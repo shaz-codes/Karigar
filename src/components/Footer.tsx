@@ -35,7 +35,7 @@ function Footer() {
 					</Sec>
 				</div>
 				<div>
-					<p className="px-4">© 2026 LUMINA. All rights reserved.</p>
+					<p className="px-4">© 2026 KARIGAR. All rights reserved.</p>
 				</div>
 			</footer>
 		</>
