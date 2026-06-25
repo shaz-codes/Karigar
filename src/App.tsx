@@ -16,7 +16,7 @@ function App() {
 		<>
 			<Router>
 				<Suspense fallback={<>hi</>}>
-					<Navbar></Navbar>
+					{/* <Navbar></Navbar> */}
 					<Routes>
 						<Route path="/" element={<Home></Home>}></Route>
 						<Route path="/cart" element={<Cart></Cart>}></Route>
@@ -33,6 +33,7 @@ function App() {
 						<Route path="/about" element={<About></About>}></Route>
 						<Route path="/shop" element={<Shop></Shop>}></Route>
 						<Route path="/craftsmen" element={<Craftsmen></Craftsmen>}></Route>
+						<Route path="/*" element={<>meow</>}></Route>
 					</Routes>
 				</Suspense>
 			</Router>

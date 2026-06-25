@@ -1,10 +1,52 @@
 import { LineChart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 type AuthProps = {
 	isLogin: boolean;
 };
 function Signup({ isLogin }: AuthProps) {
+	const [data, setData] = useState({
+		name: "",
+		email:"",
+		password: "",
+		confirmPassword: "",
+	});
+
+	const [errors, setErrors] = useState({
+		name: "",
+		email: "",
+		password:"",
+		confirmPassword: "",
+	});
+	const [loading, setLoading] = useState(false);
+	const [remeber, setRememeber] = useState(false);
+	const [showpassword,setShow] = useState(false);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setData((prev) => ({
+			...prev,
+			[name]:value,
+		}));
+		setErrors((prev)=>({
+			...prev,
+			[name]:"",
+		}));
+	};
+
+const validate=()=>{
+	const newErrors={
+		fullname:"",
+		
+		email:"",
+		password:"",
+		confirmPassword:"",
+	};
+	let value=true;
+	if(!isLogin && data.name)
+}
+
 	return (
 		<>
 			<div className="flex py-24 px-48 bg-[#F9F9F9] ">
