@@ -16,7 +16,7 @@ function App() {
 		<>
 			<Router>
 				<Suspense fallback={<>hi</>}>
-					{/* <Navbar></Navbar> */}
+					<Navbar></Navbar>
 					<Routes>
 						<Route path="/" element={<Home></Home>}></Route>
 						<Route path="/cart" element={<Cart></Cart>}></Route>
