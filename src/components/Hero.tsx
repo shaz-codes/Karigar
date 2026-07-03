@@ -55,7 +55,7 @@ function Hero() {
 					<div className="flex gap-8 flex-col justify-center px">
 						<p>Our Philosphy</p>
 						<h1 className="text-2xl font-bold">
-							Crafted by INdia's finest craftsmen
+							Crafted by India's finest craftsmen
 						</h1>
 						<p>
 							At KARIGAR, we believe in the power of conscious consumption. Each
