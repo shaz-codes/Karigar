@@ -10,6 +10,14 @@ function Cart() {
 			quantity: 1,
 			image: "bangles.jpg",
 		},
+		{
+			id: 2,
+			title: "Handwoven Basket",
+			category: "Natural Bamboo",
+			price: 85,
+			quantity: 2,
+			image: "basket.jpg",
+		},
 	]);
 
 	const SHIPPING = 12;
