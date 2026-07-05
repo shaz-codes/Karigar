@@ -8,6 +8,30 @@ function Wishlist() {
 			price: 45000,
 			img: "shawl.png",
 		},
+		{
+			id: 2,
+			name: "Hand-Woven Pashmina Shawl",
+			price: 45000,
+			img: "cloth.png",
+		},
+		{
+			id: 3,
+			name: "Hand-Woven Pashmina Shawl",
+			price: 45000,
+			img: "pot2.jpg",
+		},
+		{
+			id: 5,
+			name: "Hand-Woven Pashmina Shawl",
+			price: 45000,
+			img: "pot1.jpg",
+		},
+		{
+			id: 4,
+			name: "Hand-Woven Pashmina Shawl",
+			price: 45000,
+			img: "Chikankari.jpg",
+		},
 	]);
 
 	return (
