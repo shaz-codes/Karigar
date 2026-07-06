@@ -1,4 +1,6 @@
 import User from "./../models/User";
+import bcrypt from "bcrypt";
+import JWT from "jsonwebtoken";
 import { Request, Response } from "express";
 export function Signup(req: Request, res: Response) {
 	const { name, email, password } = req.body;
@@ -7,6 +9,12 @@ export function Signup(req: Request, res: Response) {
 			.status(400)
 			.send({ error: "name or password or email no exists" });
 	}
-	User.create({});
+	const user = User.create({
+		name,
+		email,
+		password: bcrypt.hashSync(password, "password"),
+	});
+	const jwt = JWT.sign(user, "meow");
+	return res.cookie("jwt", jwt, { httpOnly: true }).send();
 }
 export function login() {}
