@@ -75,6 +75,9 @@ function Signup({ isLogin }: AuthProps) {
 			} else {
 				const res = await fetch(`${base}/api/user/signup`, {
 					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
 					body: JSON.stringify({
 						name: data.name,
 						password: data.password,
@@ -83,6 +86,8 @@ function Signup({ isLogin }: AuthProps) {
 				});
 				if (res.ok) {
 					console.log(res.status);
+				} else {
+					console.log(await res.json());
 				}
 			}
 		} catch (err) {
@@ -91,6 +96,7 @@ function Signup({ isLogin }: AuthProps) {
 			setLoading(false);
 		}
 	};
+	console.log(errors);
 
 	return (
 		<>

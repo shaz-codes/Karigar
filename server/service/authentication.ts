@@ -12,7 +12,7 @@ export function Signup(req: Request, res: Response) {
 	const user = User.create({
 		name,
 		email,
-		password: bcrypt.hashSync(password, "password"),
+		password: bcrypt.hashSync(password, 6),
 	});
 	const jwt = JWT.sign(user, "meow");
 	return res.cookie("jwt", jwt, { httpOnly: true }).send();
