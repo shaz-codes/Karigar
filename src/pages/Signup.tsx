@@ -6,6 +6,7 @@ type AuthProps = {
 	isLogin: boolean;
 };
 function Signup({ isLogin }: AuthProps) {
+	const base = import.meta.env.VITE_API_URL;
 	const [data, setData] = useState({
 		name: "",
 		email: "",
@@ -72,7 +73,17 @@ function Signup({ isLogin }: AuthProps) {
 			if (isLogin) {
 				console.log("login", data);
 			} else {
-				console.log("signup", data);
+				const res = await fetch(`${base}/api/user/signup`, {
+					method: "POST",
+					body: JSON.stringify({
+						name: data.name,
+						password: data.password,
+						email: data.email,
+					}),
+				});
+				if (res.ok) {
+					console.log(res.status);
+				}
 			}
 		} catch (err) {
 			console.log(err);
