@@ -5,7 +5,12 @@ import routes from "./routes";
 
 const app = Express();
 
-app.use(cors());
+app.use(
+	cors({
+		origin: "http://localhost:5173",
+		credentials: true,
+	}),
+);
 app.use(Express.json());
 
 app.get("/status", (req, res) => {

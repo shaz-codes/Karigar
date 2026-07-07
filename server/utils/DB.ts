@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const initDB = () => {
 	mongoose
-		.connect("mongodb://localhost:27017/karigar")
+		.connect("mongodb://root:example@localhost:27017")
 		.then(() => console.log("MongoDB Connected"))
 		.catch((err) => console.error(err));
 };
