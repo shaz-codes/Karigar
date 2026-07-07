@@ -1,11 +1,13 @@
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type AuthProps = {
 	isLogin: boolean;
 };
 function Signup({ isLogin }: AuthProps) {
+	const navigate = useNavigate();
 	const base = import.meta.env.VITE_API_URL;
 	const [data, setData] = useState({
 		name: "",
@@ -53,8 +55,8 @@ function Signup({ isLogin }: AuthProps) {
 			newErrors.email = "Enter a valid email";
 			valid = false;
 		}
-		if (data.password.length < 6) {
-			newErrors.password = "Pasword must be of at least 6 characters";
+		if (data.password.trim().length < 6) {
+			newErrors.password = "Password must be at least 6 characters";
 			valid = false;
 		}
 		if (!isLogin && data.password !== data.confirmPassword) {
@@ -68,8 +70,9 @@ function Signup({ isLogin }: AuthProps) {
 	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!validate()) return;
+		setLoading(true);
 		try {
-			setLoading(true);
+			const endpoint = isLogin ? "/api/user/login" : "/api/user/signup";
 			if (isLogin) {
 				console.log("login", data);
 			} else {
@@ -85,11 +88,15 @@ function Signup({ isLogin }: AuthProps) {
 						email: data.email,
 					}),
 				});
+
+				const result = await res.json();
+
 				if (res.ok) {
-					console.log(res.status);
-				} else {
-					console.log(await res.json());
+					navigate("/profile");
+					alert(result.message);
+					return;
 				}
+				console.log(result);
 			}
 		} catch (err) {
 			console.log(err);
@@ -163,10 +170,7 @@ function Signup({ isLogin }: AuthProps) {
 									Forgot password?
 								</button>
 							)}
-							<button
-								type="button"
-								onClick={() => setShow((prev: any) => !prev)}
-							>
+							<button type="button" onClick={() => setShow((prev) => !prev)}>
 								{showpassword ? <EyeOff size={18} /> : <Eye size={18} />}
 							</button>
 						</div>
@@ -178,6 +182,9 @@ function Signup({ isLogin }: AuthProps) {
 							placeholder="••••••••"
 							className=" border border-gray-200 p-4 bg-[#F9F9F9] h-14"
 						></input>
+						{errors.password && (
+							<span className="text-red-500 text-sm">{errors.password}</span>
+						)}
 					</label>
 
 					{!isLogin && (
@@ -242,7 +249,10 @@ function Signup({ isLogin }: AuthProps) {
 							{isLogin ? "Don't have an account?" : "Already have an account?"}
 						</p>
 
-						<Link to={isLogin ? "/signup" : "/login"}>
+						<Link
+							to={isLogin ? "/signup" : "/login"}
+							className="ml-1 font-semibold"
+						>
 							{isLogin ? "Sign up" : "Log in"}
 						</Link>
 					</div>
