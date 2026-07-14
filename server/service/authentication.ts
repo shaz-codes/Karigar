@@ -9,12 +9,18 @@ export async function Signup(req: Request, res: Response) {
 			.status(400)
 			.send({ error: "name or password or email no exists" });
 	}
+	if (await User.find({ email: email })) {
+		return res
+			.status(400)
+			.send({ error: "User already exits, Go to Login Page" });
+	}
 	const user = await User.create({
 		name,
 		email,
 		password: bcrypt.hashSync(password, 6),
 	});
 	const jwt = JWT.sign(user.toJSON(), "meow");
+
 	return res
 		.cookie("jwt", jwt, { httpOnly: true, secure: false, sameSite: "lax" })
 		.send();
