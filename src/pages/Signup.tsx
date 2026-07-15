@@ -72,8 +72,19 @@ function Signup({ isLogin }: AuthProps) {
 		if (!validate()) return;
 		setLoading(true);
 		try {
-			const endpoint = isLogin ? "/api/user/login" : "/api/user/signup";
 			if (isLogin) {
+				const res = await fetch(`${base}/api/user/login`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						email: data.email,
+						password: data.password,
+					}),
+				});
+				console.log(await res.json());
+
 				console.log("login", data);
 			} else {
 				const res = await fetch(`${base}/api/user/signup`, {
