@@ -34,14 +34,25 @@ export async function Signup(req: Request, res: Response) {
 export async function login(req: Request, res: Response) {
 	console.log("hi");
 
-	const { email, password } = req.body;
-	const user = await User.findOne({ email });
-	if (!user) {
-		return res
-			.status(404)
-			.send("You are not registered. Signup to get started.");
+	try {
+		const { email, password } = req.body;
+		const user = await User.findOne({ email });
+
+		if (!user) {
+			return res
+				.status(401)
+				.send("You are not registered. Signup to get started.");
+		}
+		const pass = await bcrypt.compare(password, user.password!);
+		if (pass) {
+			const jwt = JWT.sign(user.toJSON(), "meow");
+			return res
+				.cookie("jwt", jwt, { httpOnly: true, secure: false, sameSite: "lax" })
+				.send();
+		} else {
+			return res.status(401).send();
+		}
+	} catch (err: any) {
+		return res.status(500).send({ error: err.message });
 	}
-	const pass = bcrypt.compare(password, user.password!);
-	return res.json().send();
-	console.log(user, email, password);
 }
