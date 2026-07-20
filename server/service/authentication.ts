@@ -35,7 +35,8 @@ export async function login(req: Request, res: Response) {
 	console.log("hi");
 
 	try {
-		const { email, password } = req.body;
+		const { email, password, remember } = req.body;
+
 		const user = await User.findOne({ email });
 
 		if (!user) {
@@ -43,11 +44,18 @@ export async function login(req: Request, res: Response) {
 				.status(401)
 				.send("You are not registered. Signup to get started.");
 		}
+
 		const pass = await bcrypt.compare(password, user.password!);
+
 		if (pass) {
 			const jwt = JWT.sign(user.toJSON(), "meow");
 			return res
-				.cookie("jwt", jwt, { httpOnly: true, secure: false, sameSite: "lax" })
+				.cookie("jwt", jwt, {
+					httpOnly: true,
+					secure: false,
+					sameSite: "lax",
+					maxAge: remember ? 30 * 24 * 60 * 60 * 1000 : undefined,
+				})
 				.send();
 		} else {
 			return res.status(401).send();

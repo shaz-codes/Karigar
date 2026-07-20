@@ -78,11 +78,17 @@ function Signup({ isLogin }: AuthProps) {
 					headers: {
 						"Content-Type": "application/json",
 					},
+					credentials: "include",
 					body: JSON.stringify({
 						email: data.email,
 						password: data.password,
+						remember,
 					}),
 				});
+				if (res.ok) {
+					navigate("/profile");
+					return;
+				}
 				console.log(await res.json());
 
 				console.log("login", data);

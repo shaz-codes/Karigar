@@ -6,9 +6,7 @@ function Navbar() {
 	const a = useLocation();
 	console.log(a);
 	const navigate = useNavigate();
-	if (a.pathname === "/signup" || a.pathname === "/login") {
-		return <></>;
-	}
+
 	const [search, setSearch] = useState("");
 	const navItems = [
 		{
@@ -39,6 +37,9 @@ function Navbar() {
 			handleSearch();
 		}
 	};
+	if (a.pathname === "/signup" || a.pathname === "/login") {
+		return <></>;
+	}
 	return (
 		<>
 			{a.pathname === "/" && (
