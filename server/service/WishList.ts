@@ -9,7 +9,8 @@ export async function GetWishlist(req: Request, res: Response) {
 	try {
 		const email = req.user.email;
 		const A = await User.findOne(email);
-		await Wishlist.find({ user: A?._id }).populate("Product");
+		const pro = await Wishlist.find({ user: A?._id }).populate("Product");
+		return res.send(pro);
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
 	}
@@ -35,7 +36,7 @@ export async function RemoveProduct(req: Request, res: Response) {
 		const { sku } = req.body;
 		const B = await Product.findOne({ sku });
 		const pro = await Wishlist.deleteOne({ user: A?._id, product: B?._id });
-		return res.status(200).send();
+		return res.send();
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
 	}

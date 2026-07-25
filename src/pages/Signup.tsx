@@ -106,14 +106,10 @@ function Signup({ isLogin }: AuthProps) {
 					}),
 				});
 
-				const result = await res.json();
-
 				if (res.ok) {
 					navigate("/profile");
-					alert(result.message);
 					return;
 				}
-				console.log(result);
 			}
 		} catch (err) {
 			console.log(err);
