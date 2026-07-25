@@ -8,8 +8,11 @@ export async function GetWishlist(req: Request, res: Response) {
 
 	try {
 		const email = req.user.email;
-		const A = await User.findOne(email);
-		const pro = await Wishlist.find({ user: A?._id }).populate("Product");
+		const user = await User.findOne({ email });
+		if (!user) {
+			return res.status(404).send("User not found");
+		}
+		const pro = await Wishlist.find({ user: user?._id }).populate("Product");
 		return res.send(pro);
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
@@ -19,10 +22,19 @@ export async function GetWishlist(req: Request, res: Response) {
 export async function AddWishlist(req: Request, res: Response) {
 	try {
 		const email = req.user.email;
-		const A = await User.findOne(email);
+		const user = await User.findOne(email);
+		if (!user) {
+			return res.status(404).send("User not found");
+		}
 		const { sku } = req.body;
-		const B = await Product.findOne({ sku });
-		const pro = await Wishlist.create({ user: A?._id, product: B?._id });
+		const product = await Product.findOne({ sku });
+		if (!product) {
+			return res.status(404).send("Product not found");
+		}
+		await Wishlist.create({
+			user: user?._id,
+			product: product?._id,
+		});
 		return res.status(201).send();
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
@@ -32,10 +44,19 @@ export async function AddWishlist(req: Request, res: Response) {
 export async function RemoveProduct(req: Request, res: Response) {
 	try {
 		const email = req.user.email;
-		const A = await User.findOne(email);
+		const user = await User.findOne(email);
+		if (!user) {
+			return res.status(404).send("User not found");
+		}
 		const { sku } = req.body;
-		const B = await Product.findOne({ sku });
-		const pro = await Wishlist.deleteOne({ user: A?._id, product: B?._id });
+		const product = await Product.findOne({ sku });
+		if (!product) {
+			return res.status(404).send("Product not found");
+		}
+		await Wishlist.deleteOne({
+			user: user?._id,
+			product: product?._id,
+		});
 		return res.send();
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
