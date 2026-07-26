@@ -22,7 +22,7 @@ export async function Signup(req: Request, res: Response) {
 			email,
 			password: bcrypt.hashSync(password, 6),
 		});
-		const jwt = JWT.sign(user.toJSON(), "meow");
+		const jwt = JWT.sign({ name, email }, "meow");
 
 		return res
 			.cookie("jwt", jwt, { httpOnly: true, secure: false, sameSite: "lax" })
@@ -48,7 +48,7 @@ export async function login(req: Request, res: Response) {
 		const pass = await bcrypt.compare(password, user.password!);
 
 		if (pass) {
-			const jwt = JWT.sign(user.toJSON(), "meow");
+			const jwt = JWT.sign({ name: user.name, email: user.email }, "meow");
 			return res
 				.cookie("jwt", jwt, {
 					httpOnly: true,

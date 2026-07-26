@@ -3,8 +3,10 @@ import Express from "express";
 import initDB from "./utils/DB";
 import routes from "./routes";
 import auth from "./middleware/auth";
+import cookieParser from "cookie-parser";
 
 const app = Express();
+app.use(cookieParser());
 
 app.use(
 	cors({

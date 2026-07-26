@@ -12,8 +12,17 @@ export async function GetWishlist(req: Request, res: Response) {
 		if (!user) {
 			return res.status(404).send("User not found");
 		}
-		const pro = await Wishlist.find({ user: user?._id }).populate("Product");
-		return res.send(pro);
+		const pro = await Wishlist.find({ user: user?._id }).populate("product");
+		return res.send(
+			pro.map((v) => ({
+				name: v.product?.name,
+				image: v.product?.image_url,
+				sku: v.product?.sku,
+				stock: v.product?.stock,
+				price: v.product?.price,
+				addedOn: v.createdAt,
+			})),
+		);
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
 	}
@@ -22,7 +31,7 @@ export async function GetWishlist(req: Request, res: Response) {
 export async function AddWishlist(req: Request, res: Response) {
 	try {
 		const email = req.user.email;
-		const user = await User.findOne(email);
+		const user = await User.findOne({ email });
 		if (!user) {
 			return res.status(404).send("User not found");
 		}
@@ -31,10 +40,13 @@ export async function AddWishlist(req: Request, res: Response) {
 		if (!product) {
 			return res.status(404).send("Product not found");
 		}
-		await Wishlist.create({
-			user: user?._id,
-			product: product?._id,
-		});
+		if (!(await Wishlist.findOne({ user: user?._id, product: product?._id }))) {
+			await Wishlist.create({
+				user: user?._id,
+				product: product?._id,
+			});
+		}
+
 		return res.status(201).send();
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
@@ -44,7 +56,7 @@ export async function AddWishlist(req: Request, res: Response) {
 export async function RemoveProduct(req: Request, res: Response) {
 	try {
 		const email = req.user.email;
-		const user = await User.findOne(email);
+		const user = await User.findOne({ email });
 		if (!user) {
 			return res.status(404).send("User not found");
 		}
