@@ -1,0 +1,327 @@
+classDiagram
+direction BT
+class AbstractAuditable {
+    Date  createdDate
+    Date  lastModifiedDate
+}
+class AbstractPersistable {
+    PK  id
+}
+class BankDetails {
+    long  id
+    String  account_name
+    String  account_number
+    String  branch
+    Instant  createdAt
+    String  createdBy
+    String  ifsc
+    String  name
+    String  nickname
+    Instant  updatedAt
+    String  updatedBy
+}
+class Brand {
+    long  id
+    Instant  createdAt
+    String  createdBy
+    String  description
+    String  displayName
+    boolean  enabled
+    String  fullName
+    String  gstId
+    String  logoUrl
+    String  officeAddress
+    String  password
+    String  pocEmail
+    String  pocName
+    String  pocPhone
+    String  storeAddress
+    Instant  updatedAt
+    String  updatedBy
+    String  username
+    String  website
+}
+class CartProduct {
+    Long  id
+    Instant  createdAt
+    int  quantity
+    Instant  updatedAt
+}
+class Customer {
+    Long  id
+    Instant  createdAt
+    List~String~  devices
+    String  email
+    String  gender
+    String  name
+    Long  phone
+    String  profilePictureLink
+    String  referralCode
+    String  referredBy
+    Instant  updatedAt
+    String  verificationId
+}
+class CustomerAddress {
+    Long  id
+    String  city
+    String  country
+    Instant  createdAt
+    BigDecimal  latitude
+    String  line1
+    BigDecimal  longitude
+    String  name
+    String  nickname
+    String  phone
+    String  postalCode
+    String  state
+    Instant  updatedAt
+}
+class CustomerOrder {
+    long  id
+    String  comment
+    Instant  createdAt
+    OrderTypes  type
+    Instant  updatedAt
+}
+class CustomerOrderAddress {
+    String  city
+    String  country
+    BigDecimal  latitude
+    String  line1
+    BigDecimal  longitude
+    String  name
+    String  nickname
+    String  phone
+    String  postalCode
+    String  state
+}
+class CustomerOrderPaymentDetails {
+    String  bankRefNumber
+    BigDecimal  billAmount
+    URL  paymentLink
+    String  paymentMethod
+    String  paymentStatus
+}
+class CustomerOrderStatus {
+    Instant  cancelledAt
+    Instant  deliveredAt
+    Boolean  isCancelled
+    Boolean  isDelivered
+    Boolean  isPickedUp
+    Boolean  isRefunded
+    Boolean  isReturned
+    Instant  pickedUpAt
+    Instant  refundedAt
+    Instant  returnedAt
+    String  status
+}
+class Darkstore {
+    Long  id
+    String  city
+    String  country
+    Instant  createdAt
+    String  line1
+    String  postalCode
+    String  state
+    Instant  updatedAt
+}
+class DarkstoreEmployee {
+    long  id
+    boolean  active
+    String  address
+    String  email
+    String  name
+    String  password
+    String  phone
+    String  username
+}
+class DarkstoreLocation {
+    BigDecimal  latitude
+    BigDecimal  longitude
+}
+class DarkstoreProductVariantStock {
+    int  availableStock
+    Instant  createdAt
+    Instant  updatedAt
+}
+class DarkstoreProductVariantStockId {
+    Long  darkstoreId
+    Long  productVariantId
+}
+class DeliveryPartner {
+    Long  id
+    Boolean  active
+    Instant  createdAt
+    String  fcmToken
+    String  name
+    String  nickname
+    Boolean  onDuty
+    long  phone
+    Instant  updatedAt
+}
+class DeliveryPartnerDetails {
+    String  aadhar
+    String  drivingLicense
+    String  registrationCertificate
+    String  vehicle
+}
+class DeliveryPartnerLocation {
+    BigDecimal  latitude
+    BigDecimal  longitude
+    Instant  sentAt
+    Instant  updatedAt
+}
+class Discount {
+    long  id
+    Instant  createdAt
+    String  createdBy
+    Instant  discountedFrom
+    BigDecimal  discountedPrice
+    Instant  discountedTo
+    Instant  updatedAt
+    String  updatedBy
+}
+class Employee {
+    long  employeeId
+    Instant  createdAt
+    Instant  dateOfBirth
+    Instant  dateOfJoining
+    String  email
+    boolean  enabled
+    String  fullName
+    Instant  lastLogin
+    Instant  modifiedAt
+    String  nickname
+    String  password
+    String  phone
+    String  username
+}
+class OrderProduct {
+    long  id
+    BigDecimal  mrp
+    BigDecimal  pricePaid
+    int  quantity
+    int  returnedQuantity
+}
+class Product {
+    long  id
+    Boolean  active
+    String  addedBy
+    Boolean  available
+    String  category
+    Instant  createdAt
+    String  description
+    String  editedBy
+    String  gender
+    BigDecimal  mrp
+    String  name
+    BigDecimal  sellingPrice
+    String  subCategory
+    Instant  updatedAt
+}
+class ProductDetails {
+    String  aesthetic
+    String  closure
+    String  closureType
+    String  colorCode
+    String  fit
+    String  fitType
+    String  material
+    String  neckline
+    String  occasion
+    String  pattern
+    String  riseStyle
+    String  sleeve
+    String  style
+    String  trend
+}
+class ProductId {
+    String  code
+    String  color
+}
+class ProductVariant {
+    Long  id
+    Instant  createdAt
+    String  size
+    Instant  updatedAt
+}
+class PurchaseOrder {
+    long  id
+    String  status
+}
+class PurchaseOrderItems {
+    long  id
+    long  purchaseOrderId
+    int  quantity
+}
+class Roles {
+    String  role
+}
+class Visuals {
+    long  id
+    Instant  createdAt
+    String  dataURL
+    int  order
+    String  type
+    Instant  updatedAt
+}
+class WishlistProduct {
+    Instant  createdAt
+}
+class WishlistProductId {
+    Long  customerId
+    Long  productId
+}
+class node6 {
+    long  verificationId
+    long  phone
+}
+
+AbstractAuditable  --|>  AbstractPersistable 
+Brand "0..1" --> "0..*" CartProduct 
+Brand "0..1" --> "0..*" DarkstoreProductVariantStock 
+Brand "0..1" --> "0..*" OrderProduct 
+Brand "0..1" --> "0..*" Product 
+Brand "0..1" --> "0..*" WishlistProduct 
+CartProduct "0..*" --> "0..1" Brand 
+CartProduct "0..*" --> "0..1" Customer 
+CartProduct "0..*" --> "0..1" ProductVariant 
+Customer "0..1" --> "0..*" CartProduct 
+Customer "0..1" --> "0..*" CustomerAddress 
+Customer "0..1" --> "0..*" CustomerOrder 
+Customer "0..1" --> "0..*" WishlistProduct 
+CustomerAddress "0..*" --> "0..1" Customer 
+CustomerOrder "0..*" --> "0..1" Customer 
+CustomerOrderAddress  --*  CustomerOrder 
+CustomerOrderPaymentDetails  --*  CustomerOrder 
+CustomerOrderStatus  --*  CustomerOrder 
+CustomerOrder "0..*" --> "0..1" DeliveryPartner 
+CustomerOrder "0..1" --> "0..*" OrderProduct 
+Darkstore "0..1" <--> "0..*" DarkstoreEmployee 
+DarkstoreLocation  --*  Darkstore 
+Darkstore "0..1" <--> "0..*" DeliveryPartner 
+DarkstoreEmployee "0..1" --> "0..1" BankDetails 
+DarkstoreEmployee "0..*" --> "0..*" Roles 
+DarkstoreProductVariantStock "0..*" --> "0..1" Brand 
+DarkstoreProductVariantStock "0..*" <--> "0..1" Darkstore 
+DarkstoreProductVariantStockId  --*  DarkstoreProductVariantStock 
+DeliveryPartner "0..1" --> "0..1" BankDetails 
+DeliveryPartnerDetails  --*  DeliveryPartner 
+DeliveryPartner "0..1" <--> "0..1" DeliveryPartnerLocation 
+Employee "0..1" --> "0..1" BankDetails 
+Employee "0..*" --> "0..*" Roles 
+OrderProduct "0..*" --> "0..1" Brand 
+OrderProduct "0..*" --> "0..1" ProductVariant 
+Product "0..*" --> "0..1" Brand 
+Product "0..1" --> "0..*" Discount 
+ProductDetails  --*  Product 
+ProductId  --*  Product 
+Product "0..1" --> "0..*" Visuals 
+ProductVariant "0..1" <--> "0..*" DarkstoreProductVariantStock 
+ProductVariant "0..*" <--> "0..1" Product 
+PurchaseOrder "0..1" --> "0..*" PurchaseOrderItems 
+PurchaseOrderItems "0..*" --> "0..1" Product 
+WishlistProduct "0..*" --> "0..1" Brand 
+WishlistProduct "0..*" --> "0..1" Customer 
+WishlistProduct "0..*" --> "0..1" Product 
+WishlistProductId  --*  WishlistProduct 
