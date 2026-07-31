@@ -1,5 +1,4 @@
 import User from "./../models/User";
-import Wishlist from "../models/Wishlist";
 import Product from "../models/Product";
 import { Request, Response } from "express";
 import Cart from "../models/Cart";
@@ -70,11 +69,14 @@ export async function addProduct(req: Request, res: Response) {
 	}
 }
 
-export async function increaseQuantity(req: Request, res: Response) {
+export async function editQuantity(req: Request, res: Response) {
 	try {
 		const email = req.user.email;
 		const user = await User.findOne({ email });
-		const { sku } = req.body;
+		if (!email) {
+			return res.status(404).send("User Not Found");
+		}
+		const { sku, quantity } = req.body;
 		const product = await Product.findOne({ sku });
 		const cartItem = await Cart.findOneAndUpdate(
 			{
@@ -82,12 +84,7 @@ export async function increaseQuantity(req: Request, res: Response) {
 				product: product?._id,
 			},
 			{
-				$inc: {
-					quantity: 1,
-				},
-			},
-			{
-				new: true,
+				quantity,
 			},
 		);
 
@@ -95,31 +92,6 @@ export async function increaseQuantity(req: Request, res: Response) {
 			return res.status(404).send("Item not found");
 		}
 		res.status(200).send(cartItem);
-	} catch (err: any) {
-		res.status(500).send({ error: err.message });
-	}
-}
-
-export async function decreaseQuantity(req: Request, res: Response) {
-	try {
-		const email = req.user.email;
-		const user = await User.findOne({ email });
-		const { sku, quantity } = req.body;
-		const product = await Product.findOne({ sku });
-		const cartItem = await Cart.findOne({
-			user: user?._id,
-			product: product?._id,
-		});
-		if (!cartItem) {
-			return res.status(404).send("Item not found");
-		}
-		if (cartItem.quantity === 1) {
-			await cartItem.deleteOne();
-		} else {
-			cartItem.quantity--;
-			await cartItem.save();
-		}
-		res.status(200).send({ message: "Updated" });
 	} catch (err: any) {
 		res.status(500).send({ error: err.message });
 	}
