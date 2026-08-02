@@ -11,7 +11,13 @@ export async function getCart(req: Request, res: Response) {
 			return res.status(404).send("user not found");
 		}
 		const product = await Cart.find({ user: user?._id }).populate("product");
-		return res.send(product);
+		return res.send(
+			product.map((v) => ({
+				...v.product?.toJSON(),
+				quantity: v.quantity,
+				addedOn: v.createdAt,
+			})),
+		);
 	} catch (err: any) {
 		return res.status(404).send({ error: err.message });
 	}
