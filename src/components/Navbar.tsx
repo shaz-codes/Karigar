@@ -1,11 +1,14 @@
-import { Heart, Search, ShoppingCart, User } from "lucide-react";
+import { Heart, LogOut, Search, ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { logoutUser } from "../features/auth/authSlice";
 
 function Navbar() {
 	const a = useLocation();
-	console.log(a);
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const user = useAppSelector((state) => state.auth.user);
 
 	const [search, setSearch] = useState("");
 	const navItems = [
@@ -36,6 +39,10 @@ function Navbar() {
 		if (e.key === "Enter") {
 			handleSearch();
 		}
+	};
+	const handleLogout = async () => {
+		await dispatch(logoutUser());
+		navigate("/login");
 	};
 	if (a.pathname === "/signup" || a.pathname === "/login") {
 		return <></>;
@@ -87,16 +94,31 @@ function Navbar() {
 						></Search>
 					</div>
 
-					<div className="flex gap-2">
+					<div className="flex gap-2 items-center">
 						<Link to={"wishlist"}>
 							<Heart></Heart>
 						</Link>
 						<Link to={"cart"}>
 							<ShoppingCart></ShoppingCart>
 						</Link>
-						<Link to={"profile"}>
-							<User></User>
-						</Link>
+						{user ? (
+							<>
+								<Link to={"profile"}>
+									<User></User>
+								</Link>
+								<button
+									onClick={handleLogout}
+									title="Logout"
+									className="cursor-pointer hover:text-gray-700"
+								>
+									<LogOut></LogOut>
+								</button>
+							</>
+						) : (
+							<Link to={"login"}>
+								<User></User>
+							</Link>
+						)}
 					</div>
 				</div>
 			</nav>

@@ -1,5 +1,7 @@
 import Express from "express";
-const app = Express();
 import { getProducts } from "../service/products";
-app.get(" ", getProducts);
+
+const app = Express();
+app.get("", getProducts);
+
 export default app;

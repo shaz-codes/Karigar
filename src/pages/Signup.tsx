@@ -2,13 +2,16 @@ import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { loginUser, signupUser } from "../features/auth/authSlice";
 
 type AuthProps = {
 	isLogin: boolean;
 };
 function Signup({ isLogin }: AuthProps) {
 	const navigate = useNavigate();
-	const base = import.meta.env.VITE_API_URL;
+	const dispatch = useAppDispatch();
+	const { status, error: authError } = useAppSelector((state) => state.auth);
 	const [data, setData] = useState({
 		name: "",
 		email: "",
@@ -22,10 +25,9 @@ function Signup({ isLogin }: AuthProps) {
 		password: "",
 		confirmPassword: "",
 	});
-	const [loading, setLoading] = useState(false);
+	const loading = status === "loading";
 	const [remember, setRemember] = useState(false);
 	const [showpassword, setShow] = useState(false);
-	console.log(data);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -70,54 +72,30 @@ function Signup({ isLogin }: AuthProps) {
 	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!validate()) return;
-		setLoading(true);
-		try {
-			if (isLogin) {
-				const res = await fetch(`${base}/api/user/login`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
-					body: JSON.stringify({
-						email: data.email,
-						password: data.password,
-						remember,
-					}),
-				});
-				if (res.ok) {
-					navigate("/profile");
-					return;
-				}
-				console.log(await res.json());
-
-				console.log("login", data);
-			} else {
-				const res = await fetch(`${base}/api/user/signup`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
-					body: JSON.stringify({
-						name: data.name,
-						password: data.password,
-						email: data.email,
-					}),
-				});
-
-				if (res.ok) {
-					navigate("/profile");
-					return;
-				}
+		if (isLogin) {
+			const result = await dispatch(
+				loginUser({
+					email: data.email,
+					password: data.password,
+					remember,
+				}),
+			);
+			if (loginUser.fulfilled.match(result)) {
+				navigate("/profile");
 			}
-		} catch (err) {
-			console.log(err);
-		} finally {
-			setLoading(false);
+		} else {
+			const result = await dispatch(
+				signupUser({
+					name: data.name,
+					password: data.password,
+					email: data.email,
+				}),
+			);
+			if (signupUser.fulfilled.match(result)) {
+				navigate("/profile");
+			}
 		}
 	};
-	console.log(errors);
 
 	return (
 		<>
@@ -143,6 +121,9 @@ function Signup({ isLogin }: AuthProps) {
 							? "Please enter your details to log in."
 							: "Please enter your details to create an account"}
 					</p>
+					{authError && (
+						<span className="text-red-500 text-sm">{authError}</span>
+					)}
 					{!isLogin && (
 						<label className="flex flex-col">
 							Full Name

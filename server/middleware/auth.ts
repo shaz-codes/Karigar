@@ -6,7 +6,11 @@ const app = Express();
 app.use((req, res, next) => {
 	console.log(req.path);
 
-	if (req.path === "/api/user/login" || req.path === "/api/user/signup") {
+	if (
+		req.path === "/api/user/login" ||
+		req.path === "/api/user/signup" ||
+		req.path === "/api/user/logout"
+	) {
 		next();
 		return;
 	}

@@ -31,6 +31,27 @@ export async function Signup(req: Request, res: Response) {
 		return res.status(500).send({ error: err.message });
 	}
 }
+export async function me(req: Request, res: Response) {
+	try {
+		if (!req.user) {
+			return res.status(401).send({ error: "Not authenticated" });
+		}
+		const user = await User.findOne({ email: req.user.email }).select(
+			"-password",
+		);
+		if (!user) {
+			return res.status(401).send({ error: "Not authenticated" });
+		}
+		return res.send({ user });
+	} catch (err: any) {
+		return res.status(500).send({ error: err.message });
+	}
+}
+
+export async function logout(req: Request, res: Response) {
+	return res.clearCookie("jwt").send();
+}
+
 export async function login(req: Request, res: Response) {
 	console.log("hi");
 

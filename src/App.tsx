@@ -1,6 +1,8 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import { useAppDispatch } from "./app/hooks";
+import { fetchCurrentUser } from "./features/auth/authSlice";
 
 const Home = lazy(() => import("./pages/Home"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -12,6 +14,12 @@ const Shop = lazy(() => import("./pages/Shop"));
 const Craftsmen = lazy(() => import("./pages/Craftmen"));
 
 function App() {
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		dispatch(fetchCurrentUser());
+	}, [dispatch]);
+
 	return (
 		<>
 			<Router>
