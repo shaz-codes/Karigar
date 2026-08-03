@@ -9,32 +9,35 @@ type Product = {
 	price: number;
 	quantity: number;
 	image_url: string;
+	type: string;
 };
 function Cart() {
 	const base = import.meta.env.VITE_API_URL;
 	const user = useAppSelector((state) => state.auth.user);
 	const [items, setItems] = useState<Array<Product>>([]);
 	useEffect(() => {
-		fetch(`${base}/api/cart`)
+		fetch(`${base}/api/cart`, {
+			credentials: "include",
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setItems(data.map((v) => ({ ...v, id: v._id })));
+				console.log(data);
 			});
 	}, []);
 
-	const [quantity, setQuantity] = useState(1);
-
 	const increment = () => {
-		setQuantity((prev) => prev + 1);
+		fetch(`${base}/api/cart`, {
+			credentials: "include",
+			method: "PUT",
+			body: JSON.stringify({}),
+			headers: { "content-type": "application/json" },
+		});
 	};
 
-	const decrement = () => {
-		setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-	};
+	const decrement = () => {};
 
-	const removeItem = (id: number) => {
-		setItems((prev) => prev.filter((item) => item.id !== id));
-	};
+	const removeItem = (id: number) => {};
 
 	return (
 		<>
@@ -74,10 +77,14 @@ function Cart() {
 														-
 													</button>
 
-													<span className="w-6 text-center">{quantity}</span>
+													<span className="w-6 text-center">
+														{item.quantity}
+													</span>
 
 													<button
-														onClick={increment}
+														onClick={() => {
+															increment();
+														}}
 														className="w-8 h-8 border rounded hover:bg-gray-100"
 													>
 														+

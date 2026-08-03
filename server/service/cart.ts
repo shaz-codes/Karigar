@@ -16,6 +16,7 @@ export async function getCart(req: Request, res: Response) {
 				...v.product?.toJSON(),
 				quantity: v.quantity,
 				addedOn: v.createdAt,
+				type: v.type,
 			})),
 		);
 	} catch (err: any) {
@@ -82,12 +83,13 @@ export async function editQuantity(req: Request, res: Response) {
 		if (!email) {
 			return res.status(404).send("User Not Found");
 		}
-		const { sku, quantity } = req.body;
+		const { sku, quantity, type } = req.body;
 		const product = await Product.findOne({ sku });
 		const cartItem = await Cart.findOneAndUpdate(
 			{
 				user: user?._id,
 				product: product?._id,
+				type,
 			},
 			{
 				quantity,
