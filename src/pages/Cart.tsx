@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { Link } from "react-router-dom";
+import { Skull } from "lucide-react";
 
 type Product = {
+	sku: string;
+	stock: [{ quantity: number; type: string }];
 	id: string;
 	name: string;
 	description: string;
@@ -11,11 +14,17 @@ type Product = {
 	image_url: string;
 	type: string;
 };
+
 function Cart() {
 	const base = import.meta.env.VITE_API_URL;
 	const user = useAppSelector((state) => state.auth.user);
 	const [items, setItems] = useState<Array<Product>>([]);
+
 	useEffect(() => {
+		fetchCart();
+	}, []);
+
+	const fetchCart = () => {
 		fetch(`${base}/api/cart`, {
 			credentials: "include",
 		})
@@ -24,20 +33,43 @@ function Cart() {
 				setItems(data.map((v) => ({ ...v, id: v._id })));
 				console.log(data);
 			});
-	}, []);
-
-	const increment = () => {
-		fetch(`${base}/api/cart`, {
-			credentials: "include",
-			method: "PUT",
-			body: JSON.stringify({}),
-			headers: { "content-type": "application/json" },
-		});
 	};
 
-	const decrement = () => {};
+	const increment = async (sku: string, quantity: number, type: string) => {
+		const res = await fetch(`${base}/api/cart`, {
+			credentials: "include",
+			method: "PUT",
+			body: JSON.stringify({ sku, type, quantity: quantity + 1 }),
+			headers: { "content-type": "application/json" },
+		});
+		if (res.ok) {
+			fetchCart();
+		}
+	};
 
-	const removeItem = (id: number) => {};
+	const decrement = async (sku: string, quantity: number, type: string) => {
+		const res = await fetch(`${base}/api/cart`, {
+			credentials: "include",
+			method: "PUT",
+			body: JSON.stringify({ sku, type, quantity: quantity - 1 }),
+			headers: { "content-type": "application/json" },
+		});
+		if (res.ok) {
+			fetchCart();
+		}
+	};
+
+	const removeItem = async (sku: string, type: string) => {
+		const res = await fetch(`${base}/api/cart`, {
+			credentials: "include",
+			method: "DELETE",
+			body: JSON.stringify({ sku, type }),
+			headers: { "content-type": "application/json" },
+		});
+		if (res.ok) {
+			fetchCart();
+		}
+	};
 
 	return (
 		<>
@@ -71,7 +103,9 @@ function Cart() {
 
 												<div className="mt-5 flex items-center gap-3">
 													<button
-														onClick={decrement}
+														onClick={() => {
+															decrement(item.sku, item.quantity, item.type);
+														}}
 														className="w-8 h-8 border rounded hover:bg-gray-100"
 													>
 														-
@@ -83,7 +117,7 @@ function Cart() {
 
 													<button
 														onClick={() => {
-															increment();
+															increment(item.sku, item.quantity, item.type);
 														}}
 														className="w-8 h-8 border rounded hover:bg-gray-100"
 													>
@@ -98,7 +132,7 @@ function Cart() {
 												</p>
 
 												<button
-													onClick={() => removeItem(item.id)}
+													onClick={() => removeItem(item.sku, item.type)}
 													className="text-red-500 hover:text-red-700"
 												>
 													Remove

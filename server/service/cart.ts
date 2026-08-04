@@ -31,7 +31,7 @@ export async function removeProduct(req: Request, res: Response) {
 		if (!user) {
 			return res.status(404).send("User not found");
 		}
-		const { sku } = req.body;
+		const { sku, type } = req.body;
 		const product = await Product.findOne({ sku });
 		if (!product) {
 			return res.status(404).send("Product not found");
@@ -39,6 +39,7 @@ export async function removeProduct(req: Request, res: Response) {
 		await Cart.deleteOne({
 			user: user._id,
 			product: product._id,
+			type,
 		});
 		return res.send({
 			message: "Product removed successfully",
@@ -85,6 +86,14 @@ export async function editQuantity(req: Request, res: Response) {
 		}
 		const { sku, quantity, type } = req.body;
 		const product = await Product.findOne({ sku });
+		if (quantity < 1) {
+			await Cart.deleteOne({
+				user: user?._id,
+				product: product?._id,
+				type,
+			});
+			res.status(200).send();
+		}
 		const cartItem = await Cart.findOneAndUpdate(
 			{
 				user: user?._id,
