@@ -1,45 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../app/hooks";
+import { Link } from "react-router-dom";
+
+type Product = {
+	sku: string;
+	stock: {
+		quantity: number;
+		type: string;
+	}[];
+	id: string;
+	name: string;
+	description: string;
+	price: number;
+	quantity: number;
+	image_url: string;
+	type: string;
+};
 
 function Wishlist() {
-	const [items, setItems] = useState([
-		{
-			id: 1,
-			name: "Hand-Woven Pashmina Shawl",
-			price: 4000,
-			img: "shawl.png",
-		},
-		{
-			id: 2,
-			name: "Unstiched cloth",
-			price: 4000,
-			img: "cloth.png",
-		},
-		{
-			id: 3,
-			name: "Mud/Clay pot single",
-			price: 4000,
-			img: "pot2.jpg",
-		},
-		{
-			id: 4,
-			name: "Chikankari Dupatta",
-			price: 4000,
-			img: "Chikankari.jpg",
-		},
-		{
-			id: 5,
-			name: "Mud/Clay pots (set of 6)",
-			price: 45000,
-			img: "pot1.jpg",
-		},
-	]);
+	const base = import.meta.env.VITE_API_URL;
+	const user = useAppSelector((state) => state.auth.user);
+	const [items, setItems] = useState<Array<Product>>([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		fetchWishlist();
+	}, []);
+
+	const fetchWishlist = async () => {
+		fetch(`${base}/api/wishlist`, {
+			credentials: "include",
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				setItems(data.map((Data: any) => ({ ...Data, id: Data._id })));
+				console.log(data);
+			});
+	};
+	if (loading) {
+		return <div className="p-16">Loading wishlist...</div>;
+	}
+
+	const removeProduct = async (sku: string, type: string) => {
+		const res = await fetch(`${base}/api/wishlist`, {
+			credentials: "include",
+			method: "DELETE",
+			body: JSON.stringify({ sku, type }),
+			headers: { "content-type": "application/json" },
+		});
+		if (res.ok) {
+			fetchWishlist();
+		}
+	};
 
 	return (
 		<>
 			<div className="p-16">
 				<h1 className="font-sam text-3xl font-semibold mb-8">My Wishlist</h1>
 
-				{items.length === 0 ? (
+				{user ? (
 					<div className="border rounded-lg p-10 text-center text-gray-500">
 						Your wishlist is empty.
 					</div>
@@ -48,7 +67,7 @@ function Wishlist() {
 						{items.map((item) => (
 							<div key={item.id} className="flex flex-col">
 								<img
-									src={item.img}
+									src={item.image_url}
 									alt={item.name}
 									className="w-full h-80 object-cover rounded"
 								/>
@@ -58,7 +77,10 @@ function Wishlist() {
 								<p className="text-sm text-gray-600 mb-3">₹{item.price}</p>
 
 								<div className="flex gap-2">
-									<button className="flex-1 px-4 py-2 bg-black text-white rounded hover:bg-pink-300">
+									<button
+										onClick={() => removeProduct(item.sku, item.type)}
+										className="flex-1 px-4 py-2 bg-black text-white rounded hover:bg-pink-300"
+									>
 										Remove
 									</button>
 

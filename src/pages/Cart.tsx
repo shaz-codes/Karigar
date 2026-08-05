@@ -30,7 +30,7 @@ function Cart() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setItems(data.map((v) => ({ ...v, id: v._id })));
+				setItems(data.map((v: any) => ({ ...v, id: v._id })));
 				console.log(data);
 			});
 	};
