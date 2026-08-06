@@ -1,99 +1,162 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
-import { Link } from "react-router-dom";
 
 type Product = {
+	_id: string;
 	sku: string;
+	name: string;
+	description: string;
+	price: number;
+	image_url: string;
+	type: string;
+	quantity: number;
 	stock: {
 		quantity: number;
 		type: string;
 	}[];
-	id: string;
-	name: string;
-	description: string;
-	price: number;
-	quantity: number;
-	image_url: string;
-	type: string;
 };
 
 function Wishlist() {
 	const base = import.meta.env.VITE_API_URL;
+
 	const user = useAppSelector((state) => state.auth.user);
-	const [items, setItems] = useState<Array<Product>>([]);
+
+	const [items, setItems] = useState<Product[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		fetchWishlist();
-	}, []);
-
 	const fetchWishlist = async () => {
-		fetch(`${base}/api/wishlist`, {
-			credentials: "include",
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setItems(data.map((Data: any) => ({ ...Data, id: Data._id })));
-				console.log(data);
+		try {
+			setLoading(true);
+
+			const res = await fetch(`${base}/api/wishlist`, {
+				credentials: "include",
 			});
+
+			if (!res.ok) {
+				throw new Error("Failed to fetch wishlist");
+			}
+
+			const data: Product[] = await res.json();
+
+			setItems(data);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			setLoading(false);
+		}
 	};
+
+	useEffect(() => {
+		if (user) {
+			fetchWishlist();
+		}
+	}, [user]);
+
+	const removeProduct = async (sku: string, type: string) => {
+		try {
+			const res = await fetch(`${base}/api/wishlist`, {
+				method: "DELETE",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					sku,
+					type,
+				}),
+			});
+
+			if (res.ok) {
+				await fetchWishlist();
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+	const addToCart = async (sku: string, type: string) => {
+		try {
+			const res = await fetch(`${base}/api/cart`, {
+				method: "POST",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					sku,
+					type,
+				}),
+			});
+
+			const data = await res.json();
+
+			if (!res.ok) {
+				throw new Error(data.error || "Failed to add to cart");
+			}
+
+			alert("Product added to cart");
+
+			// Optional: remove from wishlist after adding to cart
+			await removeProduct(sku, type);
+		} catch (err: any) {
+			alert(err.message);
+		}
+	};
+
+	if (!user) {
+		return (
+			<div className="p-16 text-center">
+				Please login to view your wishlist.
+			</div>
+		);
+	}
+
 	if (loading) {
 		return <div className="p-16">Loading wishlist...</div>;
 	}
 
-	const removeProduct = async (sku: string, type: string) => {
-		const res = await fetch(`${base}/api/wishlist`, {
-			credentials: "include",
-			method: "DELETE",
-			body: JSON.stringify({ sku, type }),
-			headers: { "content-type": "application/json" },
-		});
-		if (res.ok) {
-			fetchWishlist();
-		}
-	};
-
 	return (
-		<>
-			<div className="p-16">
-				<h1 className="font-sam text-3xl font-semibold mb-8">My Wishlist</h1>
+		<div className="p-16">
+			<h1 className="font-sam text-3xl font-semibold mb-8">My Wishlist</h1>
 
-				{user ? (
-					<div className="border rounded-lg p-10 text-center text-gray-500">
-						Your wishlist is empty.
-					</div>
-				) : (
-					<div className="grid grid-cols-4 gap-8">
-						{items.map((item) => (
-							<div key={item.id} className="flex flex-col">
-								<img
-									src={item.image_url}
-									alt={item.name}
-									className="w-full h-80 object-cover rounded"
-								/>
+			{items.length === 0 ? (
+				<div className="border rounded-lg p-10 text-center text-gray-500">
+					Your wishlist is empty.
+				</div>
+			) : (
+				<div className="grid grid-cols-4 gap-8">
+					{items.map((item) => (
+						<div key={item._id} className="flex flex-col">
+							<img
+								src={item.image_url}
+								alt={item.name}
+								className="w-full h-80 object-cover rounded"
+							/>
 
-								<h1 className="mt-3 font-semibold">{item.name}</h1>
+							<h2 className="mt-3 font-semibold">{item.name}</h2>
 
-								<p className="text-sm text-gray-600 mb-3">₹{item.price}</p>
+							<p className="text-sm text-gray-600 mb-3">₹{item.price}</p>
 
-								<div className="flex gap-2">
-									<button
-										onClick={() => removeProduct(item.sku, item.type)}
-										className="flex-1 px-4 py-2 bg-black text-white rounded hover:bg-pink-300"
-									>
-										Remove
-									</button>
+							<div className="flex gap-2">
+								<button
+									onClick={() => removeProduct(item.sku, item.type)}
+									className="flex-1 px-4 py-2 bg-black text-white rounded hover:bg-pink-300"
+								>
+									Remove
+								</button>
 
-									<button className="flex-1 px-4 py-2 bg-black text-white rounded hover:bg-pink-300">
-										Add to Cart
-									</button>
-								</div>
+								<button
+									onClick={() => addToCart(item.sku, item.type)}
+									className="flex-1 px-4 py-2 bg-black text-white rounded hover:bg-pink-300"
+								>
+									Add to Cart
+								</button>
 							</div>
-						))}
-					</div>
-				)}
-			</div>
-		</>
+						</div>
+					))}
+				</div>
+			)}
+		</div>
 	);
 }
 
