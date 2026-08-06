@@ -1,5 +1,7 @@
+import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
+import { Link } from "react-router-dom";
 
 type Product = {
 	_id: string;
@@ -95,8 +97,6 @@ function Wishlist() {
 			}
 
 			alert("Product added to cart");
-
-			// Optional: remove from wishlist after adding to cart
 			await removeProduct(sku, type);
 		} catch (err: any) {
 			alert(err.message);
@@ -105,11 +105,25 @@ function Wishlist() {
 
 	if (!user) {
 		return (
-			<div className="p-16 text-center">
-				Please login to view your wishlist.
-			</div>
+			<>
+				<div className="flex flex-col items-center justify-center text-center py-32 px-8 min-h-[60vh]">
+					<div className="rounded-full p-6 bg-gray-100">
+						<Heart className="h-8 w-8"></Heart>
+					</div>
+					<h1 className="text-2xl font-bold mb-2 mt-4">
+						Your wishlist is waiting
+					</h1>
+					<p className="text-gray-500 mb-8 max-w-sm">
+						Please log in to view your wishlist and continue shopping.
+					</p>
+					<Link to="/login" className="bg-black text-white px-8 py-3 rounded ">
+						Go to Login
+					</Link>
+				</div>
+			</>
 		);
 	}
+	g;
 
 	if (loading) {
 		return <div className="p-16">Loading wishlist...</div>;
