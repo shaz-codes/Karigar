@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { Link } from "react-router-dom";
-import { Skull } from "lucide-react";
 
 type Product = {
 	sku: string;

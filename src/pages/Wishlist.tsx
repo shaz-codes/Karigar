@@ -123,8 +123,6 @@ function Wishlist() {
 			</>
 		);
 	}
-	g;
-
 	if (loading) {
 		return <div className="p-16">Loading wishlist...</div>;
 	}
