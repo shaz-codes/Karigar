@@ -1,4 +1,4 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const craftsPersonSchema = new mongoose.Schema({
 	name: String,
@@ -11,5 +11,5 @@ const craftsPersonSchema = new mongoose.Schema({
 	craftsType: String,
 	description: String,
 });
-const crafsPerson = mongoose.model("craftsPerson", craftsPersonSchema);
-export default crafsPerson;
+const craftsPerson = mongoose.model("craftsPerson", craftsPersonSchema);
+export default craftsPerson;
