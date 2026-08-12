@@ -6,11 +6,11 @@ export async function Signup(req: Request, res: Response) {
 	console.log("hi09");
 
 	try {
-		const { name, email, password } = req.body;
-		if (!name || !email || !password) {
+		const { name, email, password, role } = req.body;
+		if (!name || !email || !password || !role) {
 			return res
 				.status(400)
-				.send({ error: "name or password or email no exists" });
+				.send({ error: "name or password or email or role no exists" });
 		}
 		if (await User.findOne({ email: email })) {
 			return res
@@ -21,8 +21,9 @@ export async function Signup(req: Request, res: Response) {
 			name,
 			email,
 			password: bcrypt.hashSync(password, 6),
+			role,
 		});
-		const jwt = JWT.sign({ name, email }, "meow");
+		const jwt = JWT.sign({ name, email, role }, "meow");
 
 		return res
 			.cookie("jwt", jwt, { httpOnly: true, secure: false, sameSite: "lax" })
@@ -69,7 +70,10 @@ export async function login(req: Request, res: Response) {
 		const pass = await bcrypt.compare(password, user.password!);
 
 		if (pass) {
-			const jwt = JWT.sign({ name: user.name, email: user.email }, "meow");
+			const jwt = JWT.sign(
+				{ name: user.name, email: user.email, role: user.role },
+				"meow",
+			);
 			return res
 				.cookie("jwt", jwt, {
 					httpOnly: true,
