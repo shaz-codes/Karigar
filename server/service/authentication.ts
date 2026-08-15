@@ -56,13 +56,24 @@ export async function me(req: Request, res: Response) {
 		if (!req.user) {
 			return res.status(401).send({ error: "Not authenticated" });
 		}
-		const user = await User.findOne({ email: req.user.email }).select(
-			"-password",
-		);
-		if (!user) {
-			return res.status(401).send({ error: "Not authenticated" });
+		if (req.user.role === "user") {
+			const user = await User.findOne({ email: req.user.email }).select(
+				"-password",
+			);
+			if (!user) {
+				return res.status(401).send({ error: "Not authenticated" });
+			}
+			return res.send({ user });
 		}
-		return res.send({ user });
+		if (req.user.role === "craftsperson") {
+			const user = await craftsPerson
+				.findOne({ email: req.user.email })
+				.select("-password");
+			if (!user) {
+				return res.status(401).send({ error: "Not authenticated" });
+			}
+			return res.send({ user });
+		}
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
 	}
