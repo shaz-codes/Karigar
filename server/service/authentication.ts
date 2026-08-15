@@ -2,6 +2,7 @@ import User from "./../models/User";
 import bcrypt from "bcrypt";
 import JWT from "jsonwebtoken";
 import { Request, Response } from "express";
+import craftsPerson from "../models/Craftsperson";
 export async function Signup(req: Request, res: Response) {
 	console.log("hi09");
 
@@ -17,12 +18,30 @@ export async function Signup(req: Request, res: Response) {
 				.status(400)
 				.send({ error: "User already exits, Go to Login Page" });
 		}
-		const user = await User.create({
-			name,
-			email,
-			password: bcrypt.hashSync(password, 6),
-			role,
-		});
+		if (role === "user") {
+			await User.create({
+				name,
+				email,
+				password: bcrypt.hashSync(password, 6),
+			});
+		}
+
+		if (role === "craftsperson") {
+			await craftsPerson.create({
+				name,
+				email,
+				password: bcrypt.hashSync(password, 6),
+			});
+		}
+
+		// if (role === "admin") {
+		// 	await admin.create({
+		// 		name,
+		// 		email,
+		// 		password: bcrypt.hashSync(password, 6),
+		// 	});
+		// }
+
 		const jwt = JWT.sign({ name, email, role }, "meow");
 
 		return res
@@ -57,33 +76,62 @@ export async function login(req: Request, res: Response) {
 	console.log("hi");
 
 	try {
-		const { email, password, remember } = req.body;
+		const { email, password, remember, role } = req.body;
 
-		const user = await User.findOne({ email });
+		if (role === "user") {
+			const user = await User.findOne({ email });
 
-		if (!user) {
-			return res
-				.status(401)
-				.send("You are not registered. Signup to get started.");
+			if (!user) {
+				return res
+					.status(401)
+					.send("You are not registered. Signup to get started.");
+			}
+			const pass = await bcrypt.compare(password, user.password!);
+
+			if (pass) {
+				const jwt = JWT.sign(
+					{ name: user.name, email: user.email, role },
+					"meow",
+				);
+				return res
+					.cookie("jwt", jwt, {
+						httpOnly: true,
+						secure: false,
+						sameSite: "lax",
+						maxAge: remember ? 30 * 24 * 60 * 60 * 1000 : undefined,
+					})
+					.send();
+			} else {
+				return res.status(401).send();
+			}
 		}
 
-		const pass = await bcrypt.compare(password, user.password!);
+		if (role === "craftsperson") {
+			const user = await craftsPerson.findOne({ email });
 
-		if (pass) {
-			const jwt = JWT.sign(
-				{ name: user.name, email: user.email, role: user.role },
-				"meow",
-			);
-			return res
-				.cookie("jwt", jwt, {
-					httpOnly: true,
-					secure: false,
-					sameSite: "lax",
-					maxAge: remember ? 30 * 24 * 60 * 60 * 1000 : undefined,
-				})
-				.send();
-		} else {
-			return res.status(401).send();
+			if (!user) {
+				return res
+					.status(401)
+					.send("You are not registered. Signup to get started.");
+			}
+			const pass = await bcrypt.compare(password, user.password!);
+
+			if (pass) {
+				const jwt = JWT.sign(
+					{ name: user.name, email: user.email, role },
+					"meow",
+				);
+				return res
+					.cookie("jwt", jwt, {
+						httpOnly: true,
+						secure: false,
+						sameSite: "lax",
+						maxAge: remember ? 30 * 24 * 60 * 60 * 1000 : undefined,
+					})
+					.send();
+			} else {
+				return res.status(401).send();
+			}
 		}
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });

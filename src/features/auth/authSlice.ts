@@ -26,11 +26,13 @@ type Credentials = {
 	email: string;
 	password: string;
 	remember?: boolean;
+	role: "user" | "craftsperson" | "admin";
 };
 
 type SignupInfo = {
 	name: string;
 	email: string;
+	role: "user" | "craftsperson" | "admin";
 	password: string;
 };
 

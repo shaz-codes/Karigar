@@ -12,11 +12,18 @@ function Signup({ isLogin }: AuthProps) {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { status, error: authError } = useAppSelector((state) => state.auth);
-	const [data, setData] = useState({
+	const [data, setData] = useState<{
+		name: string;
+		email: string;
+		password: string;
+		confirmPassword: string;
+		role: "user" | "craftsperson" | "admin";
+	}>({
 		name: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
+		role: "user",
 	});
 
 	const [errors, setErrors] = useState({
@@ -78,6 +85,7 @@ function Signup({ isLogin }: AuthProps) {
 					email: data.email,
 					password: data.password,
 					remember,
+					role: data.role,
 				}),
 			);
 			if (loginUser.fulfilled.match(result)) {
@@ -89,6 +97,7 @@ function Signup({ isLogin }: AuthProps) {
 					name: data.name,
 					password: data.password,
 					email: data.email,
+					role: data.role,
 				}),
 			);
 			if (signupUser.fulfilled.match(result)) {
@@ -199,6 +208,24 @@ function Signup({ isLogin }: AuthProps) {
 							)}
 						</label>
 					)}
+					<label className="flex flex-col">
+						Role
+						<select
+							value={data.role}
+							name="role"
+							onChange={(e) => {
+								const { name, value } = e.target;
+								setData((prev) => ({
+									...prev,
+									[name]: value,
+								}));
+							}}
+						>
+							<option value="craftsperson">Craftsperson</option>
+							<option value="user">User</option>{" "}
+							<option value="admin">Admin</option>
+						</select>
+					</label>
 					{isLogin && (
 						<label className="flex items-center gap-2">
 							<input
