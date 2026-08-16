@@ -74,6 +74,7 @@ export async function me(req: Request, res: Response) {
 			}
 			return res.send({ user });
 		}
+		return res.status(401).send({ error: "Not authenticated" });
 	} catch (err: any) {
 		return res.status(500).send({ error: err.message });
 	}

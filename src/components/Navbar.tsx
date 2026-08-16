@@ -95,28 +95,35 @@ function Navbar() {
 					</div>
 
 					<div className="flex gap-2 items-center">
-						<Link to={"wishlist"}>
-							<Heart></Heart>
-						</Link>
-						<Link to={"cart"}>
-							<ShoppingCart></ShoppingCart>
-						</Link>
+						{user?.role !== "craftsperson" && (
+							<>
+								<Link to="/wishlist">
+									<Heart />
+								</Link>
+
+								<Link to="/cart">
+									<ShoppingCart />
+								</Link>
+							</>
+						)}
+
 						{user ? (
 							<>
-								<Link to={"profile"}>
-									<User></User>
+								<Link to="/profile">
+									<User />
 								</Link>
+
 								<button
 									onClick={handleLogout}
 									title="Logout"
 									className="cursor-pointer hover:text-gray-700"
 								>
-									<LogOut></LogOut>
+									<LogOut />
 								</button>
 							</>
 						) : (
-							<Link to={"login"}>
-								<User></User>
+							<Link to="/login">
+								<User />
 							</Link>
 						)}
 					</div>
